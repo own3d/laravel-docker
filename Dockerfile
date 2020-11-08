@@ -30,6 +30,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Copy NGINX config
 COPY default /etc/nginx/sites-available/
 
+# Install Telegraf
+RUN curl https://dl.influxdata.com/telegraf/releases/telegraf_1.16.1-1_amd64.deb --output telegraf.deb \
+    && dpkg -i telegraf.deb
+
+# Change php-fpm config
+COPY www.conf /usr/local/etc/php-fpm.d/www.conf
+
 # Copy supervisord config
 COPY supervisord.conf /etc/supervisord.conf
 
