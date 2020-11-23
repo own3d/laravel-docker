@@ -29,6 +29,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Copy NGINX config
 COPY default /etc/nginx/sites-available/
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # Install Telegraf
 RUN curl https://dl.influxdata.com/telegraf/releases/telegraf_1.16.1-1_amd64.deb --output telegraf.deb \
