@@ -2,24 +2,30 @@
 
 set -e
 
-role=${CONTAINER_ROLE:-app}
-env=${APP_ENV:-production}
+ROLE=${CONTAINER_ROLE:-app}
+ENV=${APP_ENV:-production}
+TELEGRAF=${TELEGRAF_CONFIG}
 
-if [ "$env" != "local" ]; then
+if [ "$ENV" != "local" ]; then
     echo "Caching configuration..."
     (cd /var/www/html/ && php artisan config:cache && php artisan route:cache && php artisan view:cache)
 fi
 
-if [ "$role" = "app" ]; then
-    exec /usr/bin/supervisord -n
+if [ "$ROLE" = "app" ]; then
+    
+    if [ -z "$TELEGRAF" ]; then
+        exec /usr/bin/supervisord -n -c "/etc/supervisord_plain.conf"
+    else
+        exec /usr/bin/supervisord -n -c "/etc/supervisord_telegraf.conf"
+    fi
 
-elif [ "$role" = "queue" ]; then
+elif [ "$ROLE" = "queue" ]; then
 
 
     echo "Running the queue..."
     php /var/www/html/artisan horizon
 
-elif [ "$role" = "scheduler" ]; then
+elif [ "$ROLE" = "scheduler" ]; then
 
     while [ true ]
     do
@@ -28,6 +34,6 @@ elif [ "$role" = "scheduler" ]; then
     done
 
 else
-    echo "Could not match the container role \"$role\""
+    echo "Could not match the container ROLE \"$ROLE\""
     exit 1
 fi

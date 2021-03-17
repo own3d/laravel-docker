@@ -1,5 +1,7 @@
 FROM nanoninja/php-fpm:7.4.10
 
+ENV TELEGRAF_CONFIG=
+
 # Copy configs and start script
 COPY start.sh /usr/local/bin/start
 
@@ -39,7 +41,8 @@ RUN curl https://dl.influxdata.com/telegraf/releases/telegraf_1.16.1-1_amd64.deb
 COPY www.conf /usr/local/etc/php-fpm.d/www.conf
 
 # Copy supervisord config
-COPY supervisord.conf /etc/supervisord.conf
+COPY supervisord_telegraf.conf /etc/supervisord_telegraf.conf
+COPY supervisord_plain.conf /etc/supervisord_plain.conf
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
