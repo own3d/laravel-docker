@@ -45,8 +45,8 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-reco
         libonig-dev \
 		libzip-dev \
         nginx \
-        supervisor \
-    && docker-php-ext-install -j$(nproc) \
+        supervisor
+RUN docker-php-ext-install -j$(nproc) \
         bcmath \
         bz2 \
         calendar \
@@ -59,17 +59,17 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-reco
         pgsql \
         soap \
         sockets \
-        xsl \
+        xsl
 # Install Imagick PHP Extension
-    && git clone https://github.com/Imagick/imagick \
+RUN git clone https://github.com/Imagick/imagick \
     && cd imagick \
     && git checkout master && git pull \
     && phpize && ./configure && make && make install \
     && cd .. && rm -Rf imagick \
     && docker-php-ext-enable imagick \
-    && rm -rf /tmp/* \
+    && rm -rf /tmp/*
 # Install Remaining PHP Extensions
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd \
     && PHP_OPENSSL=yes docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
     && docker-php-ext-install -j$(nproc) imap \
