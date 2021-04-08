@@ -57,7 +57,6 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-reco
         pgsql \
         soap \
         sockets \
-        xmlrpc \
         xsl \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd \
@@ -79,15 +78,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-reco
     && apt-get autoremove --purge -y && apt-get autoclean -y && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /tmp/* /var/tmp/* \
-    && docker-php-ext-configure gd \
-    && docker-php-ext-install -j$(nproc) gd \
-    && docker-php-ext-install pdo_mysql \
-    && docker-php-ext-install mysqli \
-    && docker-php-ext-install zip \
-	&& docker-php-ext-configure sockets \
-	&& docker-php-ext-install sockets \
 	&& docker-php-ext-install pcntl \
-    && docker-php-source delete
 
 # Copy NGINX config
 COPY default /etc/nginx/sites-available/
