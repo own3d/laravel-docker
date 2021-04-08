@@ -30,6 +30,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-reco
         libxslt1-dev \
         libzip-dev \
         memcached \
+        imagemagick \
         wget \
         unzip \
         zlib1g-dev \
@@ -59,9 +60,6 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-reco
         soap \
         sockets \
         xsl \
-# Install ImageMagick
-    && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
-    && apk add --no-cache bash imagemagick-dev \
 # Install Imagick PHP Extension
     && git clone https://github.com/Imagick/imagick \
     && cd imagick \
@@ -69,8 +67,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-reco
     && phpize && ./configure && make && make install \
     && cd .. && rm -Rf imagick \
     && docker-php-ext-enable imagick \
-    && apk del .build-deps \
-    && rm -rf /tmp/* /var/cache/apk/* \
+    && rm -rf /tmp/* \
 # Install Remaining PHP Extensions
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd \
