@@ -7,6 +7,7 @@ COPY start.sh /usr/local/bin/start
 
 # Install depencencies
 RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+        git \
         g++ \
         libbz2-dev \
         libc-client-dev \
@@ -58,6 +59,19 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-reco
         soap \
         sockets \
         xsl \
+# Install ImageMagick
+    && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
+    && apk add --no-cache bash imagemagick-dev \
+# Install Imagick PHP Extension
+    && git clone https://github.com/Imagick/imagick \
+    && cd imagick \
+    && git checkout master && git pull \
+    && phpize && ./configure && make && make install \
+    && cd .. && rm -Rf imagick \
+    && docker-php-ext-enable imagick \
+    && apk del .build-deps \
+    && rm -rf /tmp/* /var/cache/apk/* 
+# Install Remaining PHP Extensions
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd \
     && PHP_OPENSSL=yes docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
@@ -72,7 +86,6 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-reco
     && pecl install memcached && docker-php-ext-enable memcached \
     && pecl install mongodb && docker-php-ext-enable mongodb \
     && pecl install redis && docker-php-ext-enable redis \
-    && yes '' | pecl install imagick && docker-php-ext-enable imagick \
     && docker-php-source delete \
     && apt-get remove -y g++ wget \
     && apt-get autoremove --purge -y && apt-get autoclean -y && apt-get clean -y \
