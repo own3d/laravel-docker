@@ -70,7 +70,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-reco
     && cd .. && rm -Rf imagick \
     && docker-php-ext-enable imagick \
     && apk del .build-deps \
-    && rm -rf /tmp/* /var/cache/apk/* 
+    && rm -rf /tmp/* /var/cache/apk/* \
 # Install Remaining PHP Extensions
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd \
