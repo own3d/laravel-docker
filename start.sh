@@ -32,7 +32,7 @@ elif [ "$ROLE" = "scheduler" ]; then
       php /var/www/html/artisan schedule:run --verbose --no-interaction &
       sleep 60
     done
-
+    
 else
     echo "Could not match the container ROLE \"$ROLE\""
     exit 1
