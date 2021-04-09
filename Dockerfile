@@ -33,9 +33,8 @@ RUN git clone https://github.com/Imagick/imagick \
 
 # RUN pecl install imagick
 
-# Install Remaining PHP Extensions
+# Clean Up
 RUN docker-php-source delete \
-    && apk del g++ wget \
     && rm -rf /tmp/* /var/tmp/* \
     && rm -rf /tmp/* /var/cache/apk/*
 

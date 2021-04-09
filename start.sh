@@ -14,9 +14,9 @@ fi
 if [ "$ROLE" = "app" ]; then
     
     if [ -z "$TELEGRAF" ]; then
-        exec supervisord -n -c "/etc/supervisord_plain.conf"
+        exec /usr/bin/supervisord -n -c "/etc/supervisord_plain.conf"
     else
-        exec supervisord -n -c "/etc/supervisord_telegraf.conf"
+        exec /usr/bin/supervisord -n -c "/etc/supervisord_telegraf.conf"
     fi
 
 elif [ "$ROLE" = "queue" ]; then
