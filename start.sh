@@ -5,6 +5,7 @@ set -e
 ROLE=${CONTAINER_ROLE:-app}
 ENV=${APP_ENV:-production}
 TELEGRAF=${TELEGRAF_CONFIG}
+MAX_REQUESTS=${OCTANE_MAX_REQUESTS:-250}
 
 if [ "$ENV" != "local" ]; then
     echo "Caching configuration..."
@@ -32,7 +33,11 @@ elif [ "$ROLE" = "scheduler" ]; then
       php /var/www/html/artisan schedule:run --verbose --no-interaction &
       sleep 60
     done
-    
+
+elif [ "$ROLE" = "octane" ]; then
+
+    php /var/www/html/artisan octane:start --max-requests=${MAX_REQUESTS}
+
 else
     echo "Could not match the container ROLE \"$ROLE\""
     exit 1
