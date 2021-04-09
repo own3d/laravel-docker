@@ -16,7 +16,8 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/reposit
         supervisor \
         nodejs npm \
         git \
-        imagemagick php8-dev imagemagick imagemagick-libs imagemagick-dev
+        imagemagick php8-dev imagemagick imagemagick-libs imagemagick-dev \
+        bash
         
 # Install Composer
 RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer
