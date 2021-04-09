@@ -9,9 +9,9 @@ COPY start.sh /usr/local/bin/start
 # Install depencencies
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
     && apk update && apk upgrade && apk add --no-cache --virtual \
-        g++ make libstdc++ curl-dev openssl-dev pcre-dev pcre2-dev zlib-dev bash build-base freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev libzip-dev \
+        .build-deps $PHPIZE_DEPS g++ make libstdc++ curl-dev openssl-dev pcre-dev pcre2-dev zlib-dev bash build-base freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev libzip-dev \
         php8-curl php8-mbstring php8-xml php8-zip php8-bcmath php8-intl php8-gd php8-pcntl \
-        php8-pdo_mysql php8-sqlite3 php8-pecl-redis php8-pecl-swoole php8-pecl-mongodb \
+        php8-pdo_mysql php8-sqlite3 php8-pecl-redis php8-pecl-mongodb \
         nginx \
         supervisor \
         nodejs npm \
@@ -38,6 +38,18 @@ RUN git clone https://github.com/Imagick/imagick \
     && cd .. && rm -Rf imagick \
     && docker-php-ext-enable imagick \
     && rm -rf /tmp/*
+
+# Install Swoole PHP Extension
+RUN mkdir -p /usr/src/php/ext/swoole \
+    && curl -sfL https://github.com/swoole/swoole-src/archive/v4.6.5.tar.gz -o swoole.tar.gz \
+    && tar xfz swoole.tar.gz --strip-components=1 -C /usr/src/php/ext/swoole \
+    && docker-php-ext-configure swoole \
+        --enable-http2   \
+        --enable-mysqlnd \
+        --enable-openssl \
+        --enable-sockets --enable-swoole-curl --enable-swoole-json \
+    && docker-php-ext-install -j$(nproc) swoole \
+    && rm -f swoole.tar.gz $HOME/.composer/*-old.phar
 
 # Clean Up
 RUN docker-php-source delete \
