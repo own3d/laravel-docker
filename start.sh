@@ -36,7 +36,7 @@ elif [ "$ROLE" = "scheduler" ]; then
 
 elif [ "$ROLE" = "octane" ]; then
 
-    php /var/www/html/artisan octane:start --max-requests=${MAX_REQUESTS} --port=80
+    php /var/www/html/artisan octane:start --max-requests=${MAX_REQUESTS} --port=80 --host=0.0.0.0
 
 else
     echo "Could not match the container ROLE \"$ROLE\""
