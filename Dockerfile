@@ -29,6 +29,7 @@ RUN docker-php-ext-install pdo_mysql \
 	&& docker-php-ext-configure sockets \
 	&& docker-php-ext-install sockets \
 	&& docker-php-ext-install pcntl \
+	&& pecl install redis \
 	&& docker-php-ext-enable redis
 
 # Install Imagick PHP Extension
