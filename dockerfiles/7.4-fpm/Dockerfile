@@ -6,7 +6,8 @@ ENV TELEGRAF_CONFIG=
 COPY start.sh /usr/local/bin/start
 
 # Install depencencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
+RUN apt-get install -y --no-install-recommends \
         curl \
         libmemcached-dev \
         libz-dev \
@@ -16,8 +17,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libssl-dev \
         libmcrypt-dev \
         libonig-dev \
-		libzip-dev \
+	libzip-dev \
         nginx \
+	nodejs \
+	git \
         supervisor \
     && docker-php-ext-configure gd \
     && docker-php-ext-install -j$(nproc) gd \
