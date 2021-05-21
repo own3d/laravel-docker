@@ -1,6 +1,6 @@
 FROM php:8.0.3-fpm-alpine
 
-ENV TELEGRAF_CONFIG=
+ENV TELEGRAF_CONFIG=""
 ENV TELEGRAF_VERSION=1.18.1
 
 # Copy configs and start script
@@ -10,7 +10,7 @@ COPY start.sh /usr/local/bin/start
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
     && apk update && apk upgrade && apk add --no-cache --virtual \
         .build-deps $PHPIZE_DEPS g++ make libstdc++ curl-dev openssl-dev pcre-dev pcre2-dev zlib-dev bash build-base libzip-dev \
-        freetype libpng libfreetype6-dev libjpeg62-turbo-dev libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev \
+        freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev \
         php8-curl php8-mbstring php8-xml php8-zip php8-bcmath php8-intl php8-gd php8-pcntl \
         php8-pdo_mysql php8-sqlite3 php8-pecl-redis php8-pecl-mongodb \
         nginx \
@@ -31,8 +31,11 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install zip \
 	&& docker-php-ext-configure sockets \
 	&& docker-php-ext-install sockets \
-	&& docker-php-ext-install pcntl \
-	&& docker-php-ext-enable redis
+	&& docker-php-ext-install pcntl
+
+# Install Redis PHP Extension
+RUN pecl install -o -f redis \
+    &&  docker-php-ext-enable redis
 
 # Install Imagick PHP Extension
 RUN git clone https://github.com/Imagick/imagick \
@@ -40,8 +43,7 @@ RUN git clone https://github.com/Imagick/imagick \
     && git checkout master && git pull \
     && phpize && ./configure && make && make install \
     && cd .. && rm -Rf imagick \
-    && docker-php-ext-enable imagick \
-    && rm -rf /tmp/*
+    && docker-php-ext-enable imagick
 
 # Install Swoole PHP Extension
 RUN mkdir -p /usr/src/php/ext/swoole \

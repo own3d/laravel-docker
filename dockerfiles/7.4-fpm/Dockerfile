@@ -1,6 +1,6 @@
 FROM nanoninja/php-fpm:7.4.10
 
-ENV TELEGRAF_CONFIG=
+ENV TELEGRAF_CONFIG=""
 
 # Copy configs and start script
 COPY start.sh /usr/local/bin/start
