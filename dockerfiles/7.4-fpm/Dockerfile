@@ -14,15 +14,16 @@ RUN apt-get install -y --no-install-recommends \
         libjpeg-dev \
         libpng-dev \
         libfreetype6-dev \
+        libjpeg62-turbo-dev \
         libssl-dev \
         libmcrypt-dev \
         libonig-dev \
-	libzip-dev \
+	    libzip-dev \
         nginx \
-	nodejs \
-	git \
+	    nodejs \
+	    git \
         supervisor \
-    && docker-php-ext-configure gd \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install pdo_mysql \
     && docker-php-ext-install mysqli \
