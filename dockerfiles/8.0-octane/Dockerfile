@@ -1,10 +1,7 @@
-FROM php:8.0.3-fpm-alpine
+FROM php:8.0-fpm-alpine
 
 ENV TELEGRAF_CONFIG=""
 ENV TELEGRAF_VERSION=1.18.1
-
-# Copy configs and start script
-COPY start.sh /usr/local/bin/start
 
 # Install depencencies
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
@@ -26,6 +23,8 @@ RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-di
 # Enable php extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd \
+    && docker-php-ext-install bcmath \
+    && docker-php-ext-install exif \
     && docker-php-ext-install pdo_mysql \
     && docker-php-ext-install mysqli \
     && docker-php-ext-install zip \
@@ -33,9 +32,11 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 	&& docker-php-ext-install sockets \
 	&& docker-php-ext-install pcntl
 
-# Install Redis PHP Extension
-RUN pecl install -o -f redis \
-    &&  docker-php-ext-enable redis
+# Install Redis & MongoDB PHP Extension
+RUN pecl install redis \
+    && pecl install mongodb \
+    && docker-php-ext-enable redis \
+    && docker-php-ext-enable mongodb
 
 # Install Imagick PHP Extension
 RUN git clone https://github.com/Imagick/imagick \
@@ -62,10 +63,6 @@ RUN docker-php-source delete \
     && rm -rf /tmp/* /var/tmp/* \
     && rm -rf /tmp/* /var/cache/apk/*
 
-# Copy NGINX config
-COPY default /etc/nginx/sites-available/
-COPY nginx.conf /etc/nginx/nginx.conf
-
 # Install Telegraf
 ADD https://dl.influxdata.com/telegraf/releases/telegraf-${TELEGRAF_VERSION}_linux_amd64.tar.gz ./
 RUN tar -C . -xzf telegraf-${TELEGRAF_VERSION}_linux_amd64.tar.gz \
@@ -76,12 +73,13 @@ RUN tar -C . -xzf telegraf-${TELEGRAF_VERSION}_linux_amd64.tar.gz \
         && cp -R telegraf-${TELEGRAF_VERSION}/var/log /var/log \
         && rm -rf *.tar.gz* telegraf-${TELEGRAF_VERSION}/
 
-# Change php-fpm config
-COPY www.conf /usr/local/etc/php-fpm.d/www.conf
-
-# Copy supervisord config
-COPY supervisord_telegraf.conf /etc/supervisord_telegraf.conf
+# Copy configs and start script
+COPY default /etc/nginx/sites-available/default
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY start.sh /usr/local/bin/start
 COPY supervisord_plain.conf /etc/supervisord_plain.conf
+COPY supervisord_telegraf.conf /etc/supervisord_telegraf.conf
+COPY www.conf /usr/local/etc/php-fpm.d/www.conf
 
 # Make start.sh executable
 RUN chmod 0550 /usr/local/bin/start
