@@ -80,6 +80,7 @@ COPY start.sh /usr/local/bin/start
 COPY supervisord_plain.conf /etc/supervisord_plain.conf
 COPY supervisord_telegraf.conf /etc/supervisord_telegraf.conf
 COPY www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY overrides.ini  /usr/local/etc/php/conf.d/docker-php-overrides.ini
 
 # Make start.sh executable
 RUN chmod 0550 /usr/local/bin/start
