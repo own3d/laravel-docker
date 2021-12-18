@@ -1,0 +1,45 @@
+on: [ push ]
+name: Build
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        runtime: [ "8.0-octane-minimal", "8.1-octane-minimal" ]
+    name: "own3d/laravel-docker:${{ matrix.runtime }}"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to Container Registry
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build and push own3d/laravel-docker:${{ matrix.runtime }}
+        if: github.ref == 'refs/heads/master'
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./dockerfiles/${{ matrix.runtime }}/Dockerfile
+          platforms: |
+            linux/amd64
+            linux/arm64/v8
+          push: true
+          tags: |
+            own3d/laravel-docker:${{ matrix.runtime }}
+      - name: Build and push own3d/laravel-docker:${{ matrix.runtime }}-develop
+        if: github.ref == 'refs/heads/develop'
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./dockerfiles/${{ matrix.runtime }}/Dockerfile
+          platforms: |
+            linux/amd64
+            linux/arm64/v8
+          push: true
+          tags: |
+            own3d/laravel-docker:${{ matrix.runtime }}-develop
