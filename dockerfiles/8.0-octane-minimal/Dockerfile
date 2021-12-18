@@ -35,7 +35,7 @@ RUN apk --no-cache upgrade && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
 # PHP: Install extensions
     pecl channel-update pecl.php.net && \
-    pecl install swoole imagick mongodb redis && \
+    pecl install swoole-4.6.5 imagick mongodb redis && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install mbstring xml exif pcntl gd zip sockets pdo pdo_pgsql pdo_mysql bcmath && \
     docker-php-ext-enable mbstring xml gd zip swoole imagick mongodb redis exif pcntl sockets bcmath pdo pdo_pgsql pdo_mysql && \
