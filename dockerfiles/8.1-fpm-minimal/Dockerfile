@@ -61,10 +61,10 @@ RUN docker-php-source delete \
     && rm -rf /tmp/* /var/tmp/* \
     && rm -rf /tmp/* /var/cache/apk/*
 
-COPY entrypoint.sh /usr/local/bin/entrypoint
-COPY supervisord_plain.conf /etc/supervisord_plain.conf
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY dockerfiles/8.1-fpm-minimal/entrypoint.sh /usr/local/bin/entrypoint
+COPY dockerfiles/8.1-fpm-minimal/supervisord_plain.conf /etc/supervisord_plain.conf
+COPY dockerfiles/8.1-fpm-minimal/nginx.conf /etc/nginx/nginx.conf
+COPY dockerfiles/8.1-fpm-minimal/www.conf /usr/local/etc/php-fpm.d/www.conf
 
 EXPOSE 8000
 
