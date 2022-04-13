@@ -10,8 +10,9 @@ Here is our official list of images currently under development. Not all images 
 
 | Tag                  | Supported | Description                      |
 |----------------------|-----------|----------------------------------|
-| `8.1-octane-minimal` | 👍        | Pre-release                      |
-| `8.0-octane-minimal` | 👍        | Pre-release                      |
+| `8.1-fpm-minimal`    | 👍        | Pre-release                      |
+| `8.1-octane-minimal` | 👍        | Ready for Production             |
+| `8.0-octane-minimal` | 👍        | Ready for Production             |
 | `8.0-octane`         | 👍        | Ready for Production             |
 | `8.0-octane-develop` | 🙅‍♀️      | Only for Development             |
 | `8.0-fpm`            | 🙅‍♀️      | Only for the migration to octane |

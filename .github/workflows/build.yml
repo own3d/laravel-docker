@@ -5,7 +5,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        runtime: [ "8.0-octane-minimal", "8.1-octane-minimal" ]
+        runtime: [ "8.0-octane-minimal", "8.1-octane-minimal", "8.1-fpm-minimal" ]
     name: "own3d/laravel-docker:${{ matrix.runtime }}"
     runs-on: ubuntu-latest
     steps:
