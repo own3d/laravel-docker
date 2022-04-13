@@ -49,3 +49,18 @@ FROM own3d/laravel-docker:8.1-octane-minimal
 # copy all your project files to the /var/www/html folder
 COPY . /var/www/html
 ```
+
+## Usage of PHP-FPM
+
+The following dockerfile show the usage of the `own3d/laravel-docker:8.1-fpm-minimal` image. Per default, it uses supervisor to start the application and expose the application on port 8000.
+
+```dockerfile
+FROM own3d/laravel-docker:8.1-fpm-minimal
+
+# copy all your project files to the /var/www/html folder
+COPY . /var/www/html
+
+# update permissions for all project files
+RUN chmod -R 777 storage/ bootstrap/
+RUN chown -R www-data:www-data /var/www/html
+```
