@@ -11,7 +11,7 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/reposi
         php8-pdo_mysql php8-sqlite3 php8-pecl-redis php8-pecl-mongodb \
         nginx \
         supervisor \
-        git \
+        git nano \
         imagemagick php8-dev imagemagick imagemagick-libs imagemagick-dev \
         bash
 
