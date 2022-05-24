@@ -66,6 +66,13 @@ COPY dockerfiles/8.1-fpm-minimal/supervisord_plain.conf /etc/supervisord_plain.c
 COPY dockerfiles/8.1-fpm-minimal/nginx.conf /etc/nginx/nginx.conf
 COPY dockerfiles/8.1-fpm-minimal/www.conf /usr/local/etc/php-fpm.d/www.conf
 
+# Fixes for file upload
+RUN mkdir -p /var/lib/nginx/tmp/client_body \
+    && chmod -R 777 /var/lib/nginx/tmp/client_body \
+    && chmod -R 777 /var/lib/nginx/tmp \
+    && chmod -R 777 /var/lib/nginx \
+    && chown -R www-data:www-data /var/www/html
+
 EXPOSE 8000
 
 CMD ["/usr/local/bin/entrypoint"]
