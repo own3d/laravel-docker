@@ -61,6 +61,6 @@ FROM own3d/laravel-docker:8.1-fpm-minimal
 COPY . /var/www/html
 
 # update permissions for all project files
-RUN chmod -R 777 storage/ bootstrap/
 RUN chown -R www-data:www-data /var/www/html
+RUN chmod -R ug+rwx storage bootstrap/cache
 ```
