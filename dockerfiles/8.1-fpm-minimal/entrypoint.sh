@@ -2,5 +2,6 @@
 
 set -e
 
-env > /var/www/html/.env
+echo "clear_env = no" >> /usr/local/etc/php-fpm.d/www.conf
+
 exec /usr/bin/supervisord -n -c "/etc/supervisord_plain.conf"
