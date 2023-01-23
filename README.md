@@ -2,23 +2,27 @@
 
 ![](own3d-laravel-docker.png)
 
-This Docker Image is currently used for our latest projects based on PHP. For security issues please contact support@own3d.tv.
+This Docker Image is currently used for our latest projects based on PHP. For security issues please contact
+support@own3d.tv.
 
 ## Images
 
-Here is our official list of images currently under development. Not all images are suitable for production, here are the ones that are maintained:
+Here is our official list of images currently under development. Not all images are suitable for production, here are
+the ones that are maintained:
 
-| Tag                  | Supported | Description                      |
-|----------------------|-----------|----------------------------------|
-| `8.1-fpm-minimal`    | 👍        | Pre-release                      |
-| `8.1-octane-minimal` | 👍        | Ready for Production             |
-| `8.0-octane-minimal` | 👍        | Ready for Production             |
-| `8.0-octane`         | 👍        | Ready for Production             |
-| `8.0-octane-develop` | 🙅‍♀️      | Only for Development             |
-| `8.0-fpm`            | 🙅‍♀️      | Only for the migration to octane |
-| `8.0-fpm-develop`    | 🙅‍♀️      | Only for Development             |
-| `7.4-fpm`            | 👍  ️     | Ready for Production             |
-| `7.4-fpm-develop`    | 🙅‍♀️      | Only for Development             |
+| Tag                  | Supported | Description          | Active Support Until |
+|----------------------|-----------|----------------------|----------------------|
+| `8.1-fpm-minimal`    | 👷        | Testing              | 8 Dec 2024           |
+| `8.1-octane-minimal` | 👷        | Testing              | 8 Dec 2024           |
+| `8.1-fpm-minimal`    | ✅         | Ready for Production | 25 Nov 2023          |
+| `8.1-octane-minimal` | ✅         | Ready for Production | 25 Nov 2023          |
+| `8.0-octane-minimal` | ❌         | Security fixes only  | 26 Nov 2022          |
+| `8.0-octane`         | ❌         | Security fixes only  | 26 Nov 2022          |
+| `8.0-octane-develop` | ❌         | Security fixes only  | 26 Nov 2022          |
+| `8.0-fpm`            | ❌         | Security fixes only  | 26 Nov 2022          |
+| `8.0-fpm-develop`    | ❌         | Security fixes only  | 26 Nov 2022          |
+| `7.4-fpm`            | ❌         | End of life          | 28 Nov 2021          |
+| `7.4-fpm-develop`    | ❌         | End of life          | 28 Nov 2021          |
 
 > All images that are not listed here will be deleted.
 
@@ -52,7 +56,8 @@ COPY . /var/www/html
 
 ## Usage of PHP-FPM
 
-The following dockerfile show the usage of the `own3d/laravel-docker:8.1-fpm-minimal` image. Per default, it uses supervisor to start the application and expose the application on port 8000.
+The following dockerfile show the usage of the `own3d/laravel-docker:8.1-fpm-minimal` image. Per default, it uses
+supervisor to start the application and expose the application on port 8000.
 
 ```dockerfile
 FROM own3d/laravel-docker:8.1-fpm-minimal
