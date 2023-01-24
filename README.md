@@ -69,3 +69,32 @@ COPY . /var/www/html
 RUN chown -R www-data:www-data /var/www/html
 RUN chmod -R ug+rwx storage bootstrap/cache
 ```
+
+## Development
+
+There are two commands that are available for development:
+
+- `make build` - Build the docker image
+- `make test` - Run the tests
+
+### Build
+
+The best way to test out a new image is to build it locally. You can do this by running the following command:
+
+> This will build the image with the name `own3d/laravel-docker:<name>-develop` and tag it with the `latest` tag.
+> Do not push those images to the registry, they are only for testing purposes.
+
+```bash
+./bin/build-develop.sh 8.2-octane-minimal 8.2-fpm-minimal
+```
+
+### Testing
+
+It's a requirement to test the image before pushing it to the registry using the CI/CD pipeline. This ensures that 
+the image is working as expected and every extension is installed correctly for the given PHP version.
+
+To test the image locally, you can run the following command:
+
+```bash
+./bin/check-platform-reqs.sh 8.2-octane-minimal 8.2-fpm-minimal
+```
