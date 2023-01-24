@@ -19,8 +19,8 @@ fi
 
 for version in "${VERSION_MATRIX[@]}"
 do
-  echo "Checking requirements for $version"
-  docker build -t "own3d/laravel-docker:$version-develop" "dockerfiles/$version"
+  echo "Build local image for $version"
+  docker build -t "own3d/laravel-docker:$version-develop" -f "dockerfiles/$version/Dockerfile" .
 
   if [[ "$OSTYPE" == "msys" ]]; then
     winpty bash ./bin/check-platform-reqs.sh "$version-develop"
