@@ -2,29 +2,33 @@
 
 ![](own3d-laravel-docker.png)
 
-This Docker Image is currently used for our latest projects based on PHP. For security issues please contact
-support@own3d.tv.
+This Docker Image is currently used for our latest projects based on PHP. It is based on the official PHP Docker Image 
+and contains all the necessary tools to run Laravel applications. It also contains the necessary extensions to run
+most of the popular PHP libraries:
+`bcmath`, `curl`, `date`, `exif`, `fileinfo`, `hash`, `imagick`, `json`, `mbstring`, 
+`PDO`, `pdo_mysql`, `pdo_sqlite`, `posix`, `redis`, `sockets`, `sqlite3`, `swoole`, 
+`zip`, `pcntl`, `gd`, `mongodb`
 
 ## Images
 
-Here is our official list of images currently under development. Not all images are suitable for production, here are
-the ones that are maintained:
+Here is our official list of images currently under maintenance. Remember that all `-unstable` and `-develop` 
+images are not suitable for production. We use the list of [PHP Supported Versions](https://www.php.net/supported-versions.php)
+to determine which images are still maintained and which are not.
 
-| Tag                  | Supported | Description          | Active Support Until |
-|----------------------|-----------|----------------------|----------------------|
-| `8.2-fpm-minimal`    | 👷        | Testing              | 8 Dec 2024           |
-| `8.2-octane-minimal` | 👷        | Testing              | 8 Dec 2024           |
-| `8.1-fpm-minimal`    | ✅         | Ready for Production | 25 Nov 2023          |
-| `8.1-octane-minimal` | ✅         | Ready for Production | 25 Nov 2023          |
-| `8.0-octane-minimal` | ❌         | Security fixes only  | 26 Nov 2022          |
-| `8.0-octane`         | ❌         | Security fixes only  | 26 Nov 2022          |
-| `8.0-octane-develop` | ❌         | Security fixes only  | 26 Nov 2022          |
-| `8.0-fpm`            | ❌         | Security fixes only  | 26 Nov 2022          |
-| `8.0-fpm-develop`    | ❌         | Security fixes only  | 26 Nov 2022          |
-| `7.4-fpm`            | ❌         | End of life          | 28 Nov 2021          |
-| `7.4-fpm-develop`    | ❌         | End of life          | 28 Nov 2021          |
+| Tag                  | Supported | Description         | Active Support Until |
+|----------------------|-----------|---------------------|----------------------|
+| `8.2-fpm-minimal`    | ✅         | Active support      | 8 Dec 2024           |
+| `8.2-octane-minimal` | ✅         | Active support      | 8 Dec 2024           |
+| `8.1-fpm-minimal`    | ✅         | Active support      | 25 Nov 2023          |
+| `8.1-octane-minimal` | ✅         | Active support      | 25 Nov 2023          |
+| `8.0-octane-minimal` | ❌         | Security fixes only | 26 Nov 2022          |
+| `8.0-octane`         | ❌         | Security fixes only | 26 Nov 2022          |
+| `8.0-fpm`            | ❌         | Security fixes only | 26 Nov 2022          |
+| `7.4-fpm`            | ❌         | End of life         | 28 Nov 2021          |
 
-> All images that are not listed here will be deleted.
+> All images that are not listed here will be deleted in the future.
+> We reserve the right to delete any end of life images at any time.
+> Please keep your infrastructure up to date.
 
 ## Concepts
 
@@ -101,3 +105,7 @@ To test the image locally, you can run the following command:
 ```bash
 ./bin/check-platform-reqs.sh 8.2-octane-minimal 8.2-fpm-minimal
 ```
+
+## Security
+
+For security issues please contact us directly at [support@own3d.tv](mailto:support@own3d.tv).
