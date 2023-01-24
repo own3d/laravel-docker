@@ -5,7 +5,7 @@ WORKDIR /var/www/html
 # Install depencencies
 RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
     && apk update && apk upgrade && apk add --no-cache --virtual \
-        .build-deps $PHPIZE_DEPS g++ make libstdc++ curl-dev openssl-dev pcre-dev pcre2-dev zlib-dev bash build-base libzip-dev \
+        .build-deps $PHPIZE_DEPS g++ make linux-headers libstdc++ curl-dev openssl-dev pcre-dev pcre2-dev zlib-dev bash build-base libzip-dev \
         freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev \
         php8-curl php8-mbstring php8-xml php8-zip php8-bcmath php8-intl php8-gd php8-pcntl \
         php8-pdo_mysql php8-sqlite3 php8-pecl-redis php8-pecl-mongodb \
@@ -61,10 +61,10 @@ RUN docker-php-source delete \
     && rm -rf /tmp/* /var/tmp/* \
     && rm -rf /tmp/* /var/cache/apk/*
 
-COPY dockerfiles/8.1-fpm-minimal/entrypoint.sh /usr/local/bin/entrypoint
-COPY dockerfiles/8.1-fpm-minimal/supervisord_plain.conf /etc/supervisord_plain.conf
-COPY dockerfiles/8.1-fpm-minimal/nginx.conf /etc/nginx/nginx.conf
-COPY dockerfiles/8.1-fpm-minimal/www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY dockerfiles/8.2-fpm-minimal/entrypoint.sh /usr/local/bin/entrypoint
+COPY dockerfiles/8.2-fpm-minimal/supervisord_plain.conf /etc/supervisord_plain.conf
+COPY dockerfiles/8.2-fpm-minimal/nginx.conf /etc/nginx/nginx.conf
+COPY dockerfiles/8.2-fpm-minimal/www.conf /usr/local/etc/php-fpm.d/www.conf
 
 # Fixes for file upload
 RUN mkdir -p /var/lib/nginx/tmp/client_body \

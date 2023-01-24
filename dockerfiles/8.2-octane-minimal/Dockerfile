@@ -31,7 +31,7 @@ WORKDIR /var/www/html
 RUN apk --no-cache upgrade && \
     apk --no-cache add bash git openssh npm gcc && \
     apk --no-cache add libxml2-dev postgresql-dev oniguruma-dev freetype-dev libjpeg-turbo-dev libpng-dev libzip-dev imagemagick-dev imagemagick-libs imagemagick && \
-    apk --no-cache add --virtual .build-deps autoconf g++ make && \
+    apk --no-cache add --virtual .build-deps autoconf g++ make linux-headers && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
 # PHP: Install extensions
     pecl channel-update pecl.php.net && \
