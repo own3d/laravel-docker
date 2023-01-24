@@ -72,10 +72,13 @@ RUN chmod -R ug+rwx storage bootstrap/cache
 
 ## Development
 
-There are two commands that are available for development:
+### CI
 
-- `make build` - Build the docker image
-- `make test` - Run the tests
+We use GitHub Actions to build and test our images. Remember that some images needs to be allow-listed to be able to
+build them. They are excluded from the build process to reduce the build time.
+
+We only create "main" images in the master branch. And we only create `-develop` images in the develop branch.
+All other branches are created as the same `-unstable` image, so try to avoid creating concurrent builds.
 
 ### Build
 
