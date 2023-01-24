@@ -5,7 +5,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        runtime: [ "8.0-octane-minimal", "8.1-octane-minimal", "8.1-fpm-minimal" ]
+        runtime: [ "8.0-octane-minimal", "8.1-octane-minimal", "8.1-fpm-minimal", "8.2-octane-minimal", "8.2-fpm-minimal" ]
+        shouldRelease:
+          - ${{ contains(github.ref, 'master') || contains(github.ref, 'develop') }}
+        # exclude 8.0 and 8.1 from unstable builds
+        exclude:
+          - runtime: "8.0-octane-minimal"
+            shouldRelease: false
+          - runtime: "8.1-octane-minimal"
+            shouldRelease: false
+          - runtime: "8.1-fpm-minimal"
+            shouldRelease: false
     name: "own3d/laravel-docker:${{ matrix.runtime }}"
     runs-on: ubuntu-latest
     steps:
@@ -19,7 +29,21 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build and push own3d/laravel-docker:${{ matrix.runtime }}-unstable
+        # we want to build and push the -unstable tag on any branch except master and develop
+        if: github.ref != 'refs/heads/master' && github.ref != 'refs/heads/develop'
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./dockerfiles/${{ matrix.runtime }}/Dockerfile
+          platforms: |
+            linux/amd64
+            linux/arm64/v8
+          push: true
+          tags: |
+            own3d/laravel-docker:${{ matrix.runtime }}-unstable
       - name: Build and push own3d/laravel-docker:${{ matrix.runtime }}
+        # we only want to build and push the main tag on master
         if: github.ref == 'refs/heads/master'
         uses: docker/build-push-action@v2
         with:
@@ -32,6 +56,7 @@ jobs:
           tags: |
             own3d/laravel-docker:${{ matrix.runtime }}
       - name: Build and push own3d/laravel-docker:${{ matrix.runtime }}-develop
+        # we only want to build and push the -develop tag on develop
         if: github.ref == 'refs/heads/develop'
         uses: docker/build-push-action@v2
         with:
