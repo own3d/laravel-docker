@@ -5,7 +5,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        runtime: [ "8.0-octane-minimal", "8.1-octane-minimal", "8.1-fpm-minimal", "8.2-octane-minimal", "8.2-fpm-minimal" ]
+        runtime: [ "8.2-octane-minimal", "8.2-fpm-minimal" ]
         shouldRelease:
           - ${{ contains(github.ref, 'master') || contains(github.ref, 'develop') }}
         # exclude 8.0 and 8.1 from unstable builds
