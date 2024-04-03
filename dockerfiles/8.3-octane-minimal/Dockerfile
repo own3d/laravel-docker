@@ -40,6 +40,7 @@ RUN apk --no-cache upgrade && \
     docker-php-ext-install mbstring xml exif pcntl gd zip sockets pdo pdo_pgsql pdo_mysql bcmath && \
     docker-php-ext-enable mbstring xml gd zip swoole imagick mongodb redis exif pcntl sockets bcmath pdo pdo_pgsql pdo_mysql && \
 # PHP: Configure ini
+    echo 'memory_limit = 512M' >> /usr/local/etc/php/conf.d/custom.ini && \
     echo 'post_max_size = 200M' >> /usr/local/etc/php/conf.d/custom.ini && \
     echo 'upload_max_filesize = 200M' >> /usr/local/etc/php/conf.d/custom.ini && \
 # CONTAINER: Cleanup build dependencies
