@@ -3,17 +3,12 @@ FROM php:8.3-fpm-alpine
 WORKDIR /var/www/html
 
 # Install depencencies
-RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
-    && apk update && apk upgrade && apk add --no-cache --virtual \
-        .build-deps $PHPIZE_DEPS g++ make libstdc++ curl-dev openssl-dev pcre-dev pcre2-dev zlib-dev bash build-base libzip-dev \
+RUN apk update && apk upgrade && apk add --no-cache --virtual \
+        .build-deps $PHPIZE_DEPS linux-headers g++ make libstdc++ curl-dev openssl-dev pcre-dev pcre2-dev zlib-dev bash build-base libzip-dev \
         freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev \
-        php8-curl php8-mbstring php8-xml php8-zip php8-bcmath php8-intl php8-gd php8-pcntl \
-        php8-pdo_mysql php8-sqlite3 php8-pecl-redis php8-pecl-mongodb \
-        nginx \
-        supervisor \
-        git nano \
-        imagemagick php8-dev imagemagick imagemagick-libs imagemagick-dev \
-        bash
+        nginx supervisor \
+        imagemagick imagemagick-libs imagemagick-dev \
+        bash git nano
 
 # Install Composer
 RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer
@@ -49,10 +44,9 @@ RUN mkdir -p /usr/src/php/ext/swoole \
     && curl -sfL https://github.com/swoole/swoole-src/archive/v5.1.2.tar.gz -o swoole.tar.gz \
     && tar xfz swoole.tar.gz --strip-components=1 -C /usr/src/php/ext/swoole \
     && docker-php-ext-configure swoole \
-        --enable-http2   \
         --enable-mysqlnd \
         --enable-openssl \
-        --enable-sockets --enable-swoole-curl --enable-swoole-json \
+        --enable-sockets --enable-swoole-curl \
     && docker-php-ext-install -j$(nproc) swoole \
     && rm -f swoole.tar.gz $HOME/.composer/*-old.phar
 

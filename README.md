@@ -15,16 +15,18 @@ Here is our official list of images currently under maintenance. Remember that a
 images are not suitable for production. We use the list of [PHP Supported Versions](https://www.php.net/supported-versions.php)
 to determine which images are still maintained and which are not.
 
-| Tag                  | Supported | Description         | Active Support Until |
-|----------------------|-----------|---------------------|----------------------|
-| `8.2-fpm-minimal`    | ✅         | Active support      | 8 Dec 2024           |
-| `8.2-octane-minimal` | ✅         | Active support      | 8 Dec 2024           |
-| `8.1-fpm-minimal`    | ✅         | Active support      | 25 Nov 2023          |
-| `8.1-octane-minimal` | ✅         | Active support      | 25 Nov 2023          |
-| `8.0-octane-minimal` | ❌         | Security fixes only | 26 Nov 2022          |
-| `8.0-octane`         | ❌         | Security fixes only | 26 Nov 2022          |
-| `8.0-fpm`            | ❌         | Security fixes only | 26 Nov 2022          |
-| `7.4-fpm`            | ❌         | End of life         | 28 Nov 2021          |
+| Tag                  | Supported | Description    | Active Support Until |
+|----------------------|-----------|----------------|----------------------|
+| `8.3-fpm-minimal`    | ✅         | Active support | 23 Nov 2025          |
+| `8.3-octane-minimal` | ✅         | Active support | 23 Nov 2025          |
+| `8.2-fpm-minimal`    | ❌         | Experimental   | 8 Dec 2024           |
+| `8.2-octane-minimal` | ❌         | Experimental   | 8 Dec 2024           |
+| `8.1-fpm-minimal`    | ❌         | End of life    | 25 Nov 2023          |
+| `8.1-octane-minimal` | ❌         | End of life    | 25 Nov 2023          |
+| `8.0-octane-minimal` | ❌         | End of life    | 26 Nov 2022          |
+| `8.0-octane`         | ❌         | End of life    | 26 Nov 2022          |
+| `8.0-fpm`            | ❌         | End of life    | 26 Nov 2022          |
+| `7.4-fpm`            | ❌         | End of life    | 28 Nov 2021          |
 
 > All images that are not listed here will be deleted in the future.
 > We reserve the right to delete any end of life images at any time.
