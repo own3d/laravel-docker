@@ -17,7 +17,7 @@ echo -e "\e[38;5;208mapplication requirements.\e[0m"
 echo -e "\e[38;5;208m\e[0m"
 
 if [ "$#" -eq 0 ]; then
-  VERSION_MATRIX=('develop' '8.0-octane-develop' '8.0-fpm-develop' '7.4-fpm-develop')
+  VERSION_MATRIX=('8.3-octane-minimal' '8.3-fpm-minimal')
 else
   VERSION_MATRIX=("$@")
 fi
@@ -35,7 +35,7 @@ do
   # we pull the image fresh if this is not a develop (local) version.
   if [[ $version != *"develop"* ]]; then
     echo -e "\e[38;5;208mPulling docker image for $version...\e[0m"
-    docker pull "own3d/laravel-docker:$version"
+    # docker pull "own3d/laravel-docker:$version"
   fi
 
   echo -e "\e[38;5;208mCreating extensions requirements for $version...\e[0m"

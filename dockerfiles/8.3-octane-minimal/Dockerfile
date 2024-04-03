@@ -30,7 +30,7 @@ WORKDIR /var/www/html
 # STSTEM: Install required packages
 RUN apk --no-cache upgrade && \
     apk --no-cache add bash git openssh npm gcc && \
-    apk --no-cache add libxml2-dev postgresql-dev oniguruma-dev freetype-dev libjpeg-turbo-dev libpng-dev libzip-dev imagemagick-dev imagemagick-libs imagemagick && \
+    apk --no-cache add linux-headers libxml2-dev postgresql-dev oniguruma-dev freetype-dev libjpeg-turbo-dev libpng-dev libzip-dev imagemagick-dev imagemagick-libs imagemagick && \
     apk --no-cache add --virtual .build-deps autoconf g++ make && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
 # PHP: Install extensions
@@ -40,8 +40,8 @@ RUN apk --no-cache upgrade && \
     docker-php-ext-install mbstring xml exif pcntl gd zip sockets pdo pdo_pgsql pdo_mysql bcmath && \
     docker-php-ext-enable mbstring xml gd zip swoole imagick mongodb redis exif pcntl sockets bcmath pdo pdo_pgsql pdo_mysql && \
 # PHP: Configure ini
-    echo 'post_max_size = 200M' >> /usr/local/etc/php/conf.d/docker-php-overrides.ini && \
-    echo 'upload_max_filesize = 200M' >> /usr/local/etc/php/conf.d/docker-php-overrides.ini && \
+    echo 'post_max_size = 200M' >> /usr/local/etc/php/conf.d/custom.ini && \
+    echo 'upload_max_filesize = 200M' >> /usr/local/etc/php/conf.d/custom.ini && \
 # CONTAINER: Cleanup build dependencies
     apk del .build-deps && \
     docker-php-source delete
