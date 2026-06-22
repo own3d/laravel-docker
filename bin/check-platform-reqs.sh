@@ -17,7 +17,7 @@ echo -e "\e[38;5;208mapplication requirements.\e[0m"
 echo -e "\e[38;5;208m\e[0m"
 
 if [ "$#" -eq 0 ]; then
-  VERSION_MATRIX=('8.3-octane-minimal' '8.3-fpm-minimal')
+  VERSION_MATRIX=('8.5-octane-minimal' '8.5-fpm-minimal' '8.4-octane-minimal' '8.4-fpm-minimal' '8.3-octane-minimal' '8.3-fpm-minimal')
 else
   VERSION_MATRIX=("$@")
 fi

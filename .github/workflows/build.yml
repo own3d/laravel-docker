@@ -5,17 +5,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        runtime: [ "8.3-octane-minimal", "8.3-fpm-minimal" ]
-        shouldRelease:
-          - ${{ contains(github.ref, 'master') || contains(github.ref, 'develop') }}
-        # exclude 8.0 and 8.1 from unstable builds
-        exclude:
-          - runtime: "8.0-octane-minimal"
-            shouldRelease: false
-          - runtime: "8.1-octane-minimal"
-            shouldRelease: false
-          - runtime: "8.1-fpm-minimal"
-            shouldRelease: false
+        runtime: [ "8.5-octane-minimal", "8.5-fpm-minimal", "8.4-octane-minimal", "8.4-fpm-minimal" ]
     name: "own3d/laravel-docker:${{ matrix.runtime }}"
     runs-on: ubuntu-latest
     steps:

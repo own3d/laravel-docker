@@ -12,7 +12,7 @@
 #
 
 if [ "$#" -eq 0 ]; then
-  VERSION_MATRIX=('8.2-octane-minimal' '8.2-fpm-minimal')
+  VERSION_MATRIX=('8.5-octane-minimal' '8.5-fpm-minimal' '8.4-octane-minimal' '8.4-fpm-minimal')
 else
   VERSION_MATRIX=("$@")
 fi
