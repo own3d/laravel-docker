@@ -1,23 +1,24 @@
 #!/bin/bash
 
 #
-# This script is used to check the requirements for the different versions.
-# It is used for local development.
+# Checks that required PHP extensions and ini settings are present in each image.
 #
-# Usage: ./bin/check-platform-reqs.sh [dockerfile]
+# Usage: ./bin/check-platform-reqs.sh [image-tag ...]
 #
 # Examples:
-#   ./bin/check-platform-reqs.sh 8.2-fpm-minimal
-#   ./bin/check-platform-reqs.sh 8.2-octane-minimal 8.2-fpm-minimal
+#   ./bin/check-platform-reqs.sh
+#   ./bin/check-platform-reqs.sh 8.5-fpm-minimal-develop
+#   ./bin/check-platform-reqs.sh 8.5-octane-minimal 8.5-fpm-minimal
 #
 
-echo -e "\e[38;5;208mWelcome to the own3d/laravel-docker check platform requirements script!\e[0m"
-echo -e "\e[38;5;208mThis tool will help you check if your docker image is compatible with your\e[0m"
-echo -e "\e[38;5;208mapplication requirements.\e[0m"
-echo -e "\e[38;5;208m\e[0m"
+RED='\e[38;5;196m'
+GREEN='\e[38;5;46m'
+CYAN='\e[38;5;51m'
+ORANGE='\e[38;5;208m'
+RESET='\e[0m'
 
 if [ "$#" -eq 0 ]; then
-  VERSION_MATRIX=('8.5-octane-minimal' '8.5-fpm-minimal' '8.4-octane-minimal' '8.4-fpm-minimal' '8.3-octane-minimal' '8.3-fpm-minimal')
+  VERSION_MATRIX=('8.5-octane-minimal' '8.5-fpm-minimal' '8.4-octane-minimal' '8.4-fpm-minimal')
 else
   VERSION_MATRIX=("$@")
 fi
@@ -28,33 +29,88 @@ EXTENSION_MATRIX=(
   'swoole' 'posix' 'gd' 'mongodb'
 )
 
+PASS=0
+FAIL=0
+
+echo -e "${ORANGE}own3d/laravel-docker — platform requirements check${RESET}"
+echo ""
+
 for version in "${VERSION_MATRIX[@]}"
 do
-  echo -e "\e[38;5;208mChecking requirements for $version...\e[0m"
+  image="own3d/laravel-docker:$version"
 
-  # we pull the image fresh if this is not a develop (local) version.
   if [[ $version != *"develop"* ]]; then
-    echo -e "\e[38;5;208mPulling docker image for $version...\e[0m"
-    # docker pull "own3d/laravel-docker:$version"
+    if ! docker pull "$image" --quiet > /dev/null 2>&1; then
+      echo -e "  ${RED}SKIP${RESET}  $version — image not found"
+      ((FAIL++)) || true
+      continue
+    fi
   fi
 
-  echo -e "\e[38;5;208mCreating extensions requirements for $version...\e[0m"
-  for extension in "${EXTENSION_MATRIX[@]}"
-  do
-    command="$command if(!extension_loaded('$extension')) { echo 'ERROR: Extension $extension on $version is missing.' . PHP_EOL;}"
+  # Build extension check PHP snippet
+  ext_checks=""
+  for extension in "${EXTENSION_MATRIX[@]}"; do
+    ext_checks="${ext_checks}if(!extension_loaded('${extension}')){echo 'ERROR: ${extension} missing'.PHP_EOL;}"
   done
 
-  echo -e "\e[38;5;208mCreating ini requirements for $version...\e[0m"
-  command="$command echo 'INFO: upload_max_filesize: ' . ini_get('upload_max_filesize') . PHP_EOL;"
-  command="$command echo 'INFO: post_max_size: ' . ini_get('post_max_size') . PHP_EOL;"
+  # Extension checks work the same way for all image types (PHP CLI is always present)
+  ext_errors=$(docker run --rm "$image" php -r "$ext_checks" 2>&1 | grep '^ERROR:' || true)
 
-  echo -e "\e[38;5;208mChecking all requirements for $version...\e[0m"
-  result=$(docker run -it --rm "own3d/laravel-docker:$version" php -r "$command")
+  # Ini/config checks differ by image type
+  if [[ $version == *"fpm"* ]]; then
+    # php_admin_value in www.conf is only applied inside the FPM process, not via CLI.
+    # Read the config file directly instead of relying on ini_get().
+    ini_output=$(docker run --rm "$image" sh -c '
+      WWW=/usr/local/etc/php-fpm.d/www.conf
+      php -r "echo \"DEBUG: memory_limit(cli)=\".ini_get(\"memory_limit\").PHP_EOL;echo \"DEBUG: upload_max_filesize(cli)=\".ini_get(\"upload_max_filesize\").PHP_EOL;echo \"DEBUG: post_max_size(cli)=\".ini_get(\"post_max_size\").PHP_EOL;"
+      grep -q "php_admin_value\[upload_max_filesize\] = 200M" "$WWW" \
+        && echo "INFO: upload_max_filesize=200M (www.conf)" \
+        || echo "ERROR: upload_max_filesize not set to 200M in www.conf"
+      grep -q "php_admin_value\[post_max_size\] = 200M" "$WWW" \
+        && echo "INFO: post_max_size=200M (www.conf)" \
+        || echo "ERROR: post_max_size not set to 200M in www.conf"
+    ' 2>&1)
+  else
+    # Octane: values are written to custom.ini, so ini_get() sees them from CLI too.
+    ini_output=$(docker run --rm "$image" php -r '
+      $m = ini_get("memory_limit");
+      echo ($m === "512M" ? "INFO" : "ERROR") . ": memory_limit=" . $m . PHP_EOL;
+      $u = ini_get("upload_max_filesize");
+      echo ($u === "200M" ? "INFO" : "ERROR") . ": upload_max_filesize=" . $u . PHP_EOL;
+      $p = ini_get("post_max_size");
+      echo ($p === "200M" ? "INFO" : "ERROR") . ": post_max_size=" . $p . PHP_EOL;
+    ' 2>&1)
+  fi
 
-  echo ""
-  echo -e "\e[38;5;208mResults are in for $version:\e[0m"
-  # mark ERROR lines red and INFO lines cyan:
-  echo -e "$result" | sed -e 's/ERROR: /\\e[38;5;196mERROR: /g' -e 's/INFO: /\\e[38;5;51mINFO: /g' | xargs -0 -I {} echo -e {}
+  ini_errors=$(echo "$ini_output" | grep '^ERROR:' || true)
+  ini_infos=$(echo "$ini_output"  | grep '^INFO:'  || true)
+  all_errors=$(printf '%s\n%s' "$ext_errors" "$ini_errors" | grep '^ERROR:' || true)
 
-  echo -e "\e[38;5;208mDone! Please compare the results for $version!\e[0m"
+  debug_lines=$(echo "$ini_output" | grep '^DEBUG:' || true)
+
+  if [ -z "$all_errors" ]; then
+    echo -e "  ${GREEN}PASS${RESET}  $version"
+    while IFS= read -r line; do
+      [ -z "$line" ] && continue
+      echo -e "        ${CYAN}${line#INFO:}${RESET}"
+    done <<< "$ini_infos"
+    while IFS= read -r line; do
+      [ -z "$line" ] && continue
+      echo -e "        ${ORANGE}${line#DEBUG:}${RESET}"
+    done <<< "$debug_lines"
+    ((PASS++)) || true
+  else
+    echo -e "  ${RED}FAIL${RESET}  $version"
+    while IFS= read -r line; do
+      [ -z "$line" ] && continue
+      echo -e "        ${RED}${line}${RESET}"
+    done <<< "$all_errors"
+    ((FAIL++)) || true
+  fi
 done
+
+echo ""
+echo -e "  ${PASS} passed, ${FAIL} failed"
+echo ""
+
+[ "$FAIL" -eq 0 ]
