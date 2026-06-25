@@ -30,15 +30,15 @@ WORKDIR /var/www/html
 # STSTEM: Install required packages
 RUN apk --no-cache upgrade && \
     apk --no-cache add bash git nano ffmpeg openssh npm gcc && \
-    apk --no-cache add linux-headers libxml2-dev postgresql-dev oniguruma-dev freetype-dev libjpeg-turbo-dev libpng-dev libzip-dev imagemagick-dev imagemagick-libs imagemagick && \
+    apk --no-cache add linux-headers libxml2-dev postgresql-dev oniguruma-dev freetype-dev libjpeg-turbo-dev libpng-dev libzip-dev imagemagick-dev imagemagick-libs imagemagick icu-dev && \
     apk --no-cache add --virtual .build-deps autoconf g++ make && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
 # PHP: Install extensions
     pecl channel-update pecl.php.net && \
     pecl install swoole imagick mongodb redis && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
-    docker-php-ext-install mbstring xml exif pcntl gd zip sockets pdo pdo_pgsql pdo_mysql bcmath && \
-    docker-php-ext-enable mbstring xml gd zip swoole imagick mongodb redis exif pcntl sockets bcmath pdo pdo_pgsql pdo_mysql && \
+    docker-php-ext-install mbstring xml exif pcntl gd zip sockets pdo pdo_pgsql pdo_mysql bcmath intl && \
+    docker-php-ext-enable mbstring xml gd zip swoole imagick mongodb redis exif pcntl sockets bcmath pdo pdo_pgsql pdo_mysql intl && \
 # PHP: Configure ini
     echo 'memory_limit = 512M' >> /usr/local/etc/php/conf.d/custom.ini && \
     echo 'post_max_size = 200M' >> /usr/local/etc/php/conf.d/custom.ini && \

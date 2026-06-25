@@ -5,7 +5,7 @@ WORKDIR /var/www/html
 # Install depencencies
 RUN apk update && apk upgrade && apk add --no-cache --virtual \
         .build-deps $PHPIZE_DEPS linux-headers g++ make libstdc++ curl-dev openssl-dev pcre-dev pcre2-dev zlib-dev bash build-base libzip-dev \
-        freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev \
+        freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev icu-dev \
         nginx supervisor \
         imagemagick imagemagick-libs imagemagick-dev \
         bash git nano ffmpeg
@@ -23,7 +23,8 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install zip \
 	&& docker-php-ext-configure sockets \
 	&& docker-php-ext-install sockets \
-	&& docker-php-ext-install pcntl
+	&& docker-php-ext-install pcntl \
+	&& docker-php-ext-install intl
 
 # Install Redis, MongoDB & Imagick PHP Extensions
 RUN pecl install redis \
