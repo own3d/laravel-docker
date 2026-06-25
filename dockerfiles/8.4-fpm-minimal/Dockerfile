@@ -8,7 +8,7 @@ RUN apk update && apk upgrade && apk add --no-cache --virtual \
         freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev \
         nginx supervisor \
         imagemagick imagemagick-libs imagemagick-dev \
-        bash git nano
+        bash git nano ffmpeg
 
 # Install Composer
 RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer

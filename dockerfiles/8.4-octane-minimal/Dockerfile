@@ -29,7 +29,7 @@ WORKDIR /var/www/html
 
 # STSTEM: Install required packages
 RUN apk --no-cache upgrade && \
-    apk --no-cache add bash git openssh npm gcc && \
+    apk --no-cache add bash git nano ffmpeg openssh npm gcc && \
     apk --no-cache add linux-headers libxml2-dev postgresql-dev oniguruma-dev freetype-dev libjpeg-turbo-dev libpng-dev libzip-dev imagemagick-dev imagemagick-libs imagemagick && \
     apk --no-cache add --virtual .build-deps autoconf g++ make && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
