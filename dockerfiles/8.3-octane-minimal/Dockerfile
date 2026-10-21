@@ -23,7 +23,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-FROM php:8.3-cli-alpine
+FROM php:8.3.36-cli-alpine
 
 WORKDIR /var/www/html
 
@@ -33,9 +33,10 @@ RUN apk --no-cache upgrade && \
     apk --no-cache add linux-headers libxml2-dev postgresql-dev oniguruma-dev freetype-dev libjpeg-turbo-dev libpng-dev libzip-dev imagemagick-dev imagemagick-libs imagemagick && \
     apk --no-cache add --virtual .build-deps autoconf g++ make && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
-# PHP: Install extensions
+# PHP: Install extensions (pinned; unpinned installs pull ext-mongodb 2.x, but apps on
+# mongodb/mongodb 1.x require ext-mongodb ^1.x)
     pecl channel-update pecl.php.net && \
-    pecl install swoole imagick mongodb redis && \
+    pecl install swoole-6.0.2 imagick-3.8.1 mongodb-1.21.0 redis-6.2.0 && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install mbstring xml exif pcntl gd zip sockets pdo pdo_pgsql pdo_mysql bcmath && \
     docker-php-ext-enable mbstring xml gd zip swoole imagick mongodb redis exif pcntl sockets bcmath pdo pdo_pgsql pdo_mysql && \

@@ -1,4 +1,4 @@
-FROM php:8.3-fpm-alpine
+FROM php:8.3.36-fpm-alpine
 
 WORKDIR /var/www/html
 
@@ -25,9 +25,10 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 	&& docker-php-ext-install sockets \
 	&& docker-php-ext-install pcntl
 
-# Install Redis & MongoDB PHP Extension
-RUN pecl install redis \
-    && pecl install mongodb \
+# Install Redis & MongoDB PHP Extension (pinned; unpinned installs pull ext-mongodb 2.x,
+# but apps on mongodb/mongodb 1.x require ext-mongodb ^1.x)
+RUN pecl install redis-6.0.2 \
+    && pecl install mongodb-1.21.0 \
     && docker-php-ext-enable redis \
     && docker-php-ext-enable mongodb
 
