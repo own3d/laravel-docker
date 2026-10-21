@@ -26,8 +26,8 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 	&& docker-php-ext-install pcntl
 
 # Install Redis & MongoDB PHP Extension
-RUN pecl install redis \
-    && pecl install mongodb \
+RUN pecl install redis-6.0.2 \
+    && pecl install mongodb-1.21.0 \
     && docker-php-ext-enable redis \
     && docker-php-ext-enable mongodb
 
